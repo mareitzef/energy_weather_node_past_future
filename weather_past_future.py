@@ -168,8 +168,9 @@ def create_df_weather(dates,wind_10m,temp2m,surf_pres,roughnesslength):
 def main():
     ####################### Main Function - Settings: #####################################
     
-    # Time period for the past 7 days
+    # set the start and end date of the time series
     today = datetime.today()
+
     #start date is one week before today 
     nr_days = 7
     first_date = (datetime.today() - timedelta(days=nr_days))
@@ -207,17 +208,9 @@ def main():
 
     else:
         #use these coordinates
-        # lat = '47.99305'
-        # lon = '7.84068'
-        #location = 'Dinkelacker' 
-        #lat = 50.667236 
-        #lon = 12.348829 
-        #location = 'Lagos' 
-        #lat= 37.526210
-        #lon = -8.660111
-        location = "HAAR Wind"
-        lat = 51.505347
-        lon = 7.9975447
+        location = 'CCC'
+        lat = '47.99305'
+        lon = '7.84068'
 
         api_key = '6545b0638b99383c1a278d3962506f4b'
         first_date = datetime.strptime('2023-01-01', '%Y-%m-%d')
@@ -351,6 +344,12 @@ def main():
 
     filename = 'Meteostat_and_openweathermap.html'
     webbrowser.open_new_tab(filename)
+
+    # output the data from Meteostats data_hourly_Mstat to an excel file including the datetime
+    df = pd.DataFrame(data_hourly_Mstat)
+    df = df.reset_index() 
+    df.to_excel("Meteostat_data_since_"+str(first_date)+"_"+str(lat)+"_"+str(lon)+".xlsx", index=False)
+
 
 
 if __name__ == '__main__':
