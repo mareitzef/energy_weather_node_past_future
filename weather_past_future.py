@@ -14,6 +14,7 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 import requests
 import json
+
 # Dublin Coordinates: 
 #lat = "53.34980"
 #lon = "-6.260309"
@@ -28,7 +29,7 @@ stations = stations.nearby(float(lat),float(lon))
 station = stations.fetch(1)
 
 # Print closest station 
-print(station)
+# print(station)
 
 # Time period for the past
 start = datetime(2023, 2, 1)
@@ -40,7 +41,7 @@ point = Point(station['latitude'], station['longitude'], 250)
 # Fetch hourly data
 data_hourly_Mstat = Hourly(point, start, end)
 data_hourly_Mstat = data_hourly_Mstat.fetch()
-print(data_hourly_Mstat.head())
+# print(data_hourly_Mstat.head())
 
 # Plot hourly data
 # Create a figure with two subplots
@@ -61,6 +62,7 @@ fig.show()
 
 
 plot(fig, filename='Meteostat.html', auto_open=True)
+
 api_key = "6545b0638b99383c1a278d3962506f4b"
 
 # Make API request
@@ -71,7 +73,8 @@ if response.status_code == 200:
     # Parse JSON response
     data_OWM = response.json()
     # Print first timestamp
-    print(data_OWM['list'][0])
+    
+    #print(data_OWM['list'][0])
     
     # Extract temperature and wind speed data
     temps = []
@@ -101,12 +104,12 @@ if response.status_code == 200:
     # Add traces for temperature and wind speed to the first subplot
     fig.add_trace(go.Scatter(x=timestamps, y=temps, name="Temperature"), row=1, col=1)
     # Add a trace for wind speed to the second subplot
-    fig.add_trace(go.Scatter(x=timestamps, y=wind_speeds, name="Wind Speed"), row=2, col=1)
+    fig.add_trace(go.Scatter(x=timestamps, y=wind_speeds, name="Wind Speed",opacity=0.7, line=dict(width=1, dash='dot'),marker=dict(color='red')), row=2, col=1)
     # Set the y-axis titles for the subplots
     fig.update_yaxes(title_text="Temperature (°C)", row=1, col=1)
     fig.update_yaxes(title_text="Wind Speed (km/h)", row=2, col=1)
 
-    fig.add_trace(go.Bar(x=timestamps, y=rains, name='Hourly Precipitation',opacity=0.5,marker=dict(color='blue')), row=3, col=1)
+    fig.add_trace(go.Bar(x=timestamps, y=rains, name='3-Hourly Precipitation',opacity=0.5,marker=dict(color='blue')), row=3, col=1)
     fig.add_trace(go.Scatter(x=timestamps, y=rain_probabs, name='Precipitation Probability',opacity=0.7, line=dict(width=1),marker=dict(color='grey')), row=3, col=1, secondary_y=True)
     fig.update_yaxes(title_text="Precipitation (mm/3h)", row=3, col=1, range=[0, max(rains)+1])
     fig.update_yaxes(title_text="Precipitation Probability (%)", secondary_y=True, row=3, col=1, range=[0, 100])
